@@ -2,6 +2,6 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased min-h-screen selection:bg-rose-500 selection:text-white;
+    @apply bg-slate-50 text-slate-800 font-sans antialiased min-h-screen selection:bg-rose-500 selection:text-white;
   }
 }

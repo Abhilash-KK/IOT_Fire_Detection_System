@@ -12,7 +12,7 @@ import {
   fetchReadings,
   fetchDevices
 } from './api';
-import { Flame, ShieldAlert, Cpu } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 
 export default function App() {
   // State variables
@@ -45,7 +45,7 @@ export default function App() {
   const loadDashboardData = useCallback(async (showLoading = false) => {
     if (showLoading) setIsRefreshing(true);
     try {
-      // Parallel fetch for snappy real-time responsiveness
+      // Parallel fetch for fast real-time response
       const [healthData, statsData, latestData, devicesData] = await Promise.all([
         fetchHealth(),
         fetchStats(),
@@ -115,11 +115,11 @@ export default function App() {
 
   const handleManualRefresh = () => {
     loadDashboardData(true);
-    loadTableData();
+    loadTableData(false);
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-rose-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
       {/* Top Navigation & Status Bar */}
       <Header
         isLivePolling={isLivePolling}
@@ -134,18 +134,20 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
         {/* Error notification banner if disconnected */}
         {!apiConnected && (
-          <div className="p-4 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-sm flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-sm flex items-center justify-between shadow-2xs">
             <div className="flex items-center space-x-3">
-              <ShieldAlert className="w-5 h-5 text-rose-400 flex-shrink-0" />
+              <ShieldAlert className="w-5 h-5 text-rose-600 flex-shrink-0" />
               <span>
                 <strong>API Unreachable:</strong> Unable to connect to the backend at{' '}
-                <code>{import.meta.env.VITE_API_URL || 'http://localhost:8000'}</code>.
-                Make sure the FastAPI server is running.
+                <code className="font-mono bg-rose-100 px-1 py-0.5 rounded text-rose-900">
+                  {import.meta.env.VITE_API_URL || 'http://localhost:8000'}
+                </code>
+                . Make sure the FastAPI server is running.
               </span>
             </div>
             <button
               onClick={handleManualRefresh}
-              className="text-xs bg-rose-600 hover:bg-rose-500 text-white font-medium px-3 py-1.5 rounded-lg transition"
+              className="text-xs bg-rose-600 hover:bg-rose-700 text-white font-medium px-3 py-1.5 rounded-lg transition shadow-2xs"
             >
               Retry
             </button>
@@ -195,14 +197,15 @@ export default function App() {
         />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 py-6 px-4 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      {/* Footer Matching Clean White Aesthetic */}
+      <footer className="border-t border-slate-200 bg-white py-4 px-4 text-xs font-mono text-slate-500">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <p>
             IoT Fire Detection System • MCA Capstone Project • ESP32 DevKit V1 + IR Optical Flame Sensor
           </p>
-          <p className="font-mono text-slate-400">
-            Backend: FastAPI + PostgreSQL • Frontend: React + Vite + Tailwind CSS
+          <p>
+            Backend: <span className="font-semibold text-slate-700">FastAPI + PostgreSQL</span> • Frontend:{' '}
+            <span className="font-semibold text-slate-700">React + Vite + Tailwind CSS</span>
           </p>
         </div>
       </footer>

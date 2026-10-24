@@ -1,5 +1,5 @@
 import React from 'react';
-import { Database, Flame, CheckCircle, Radio, Clock, ShieldAlert } from 'lucide-react';
+import { Database, Flame, CheckCircle2, Wifi } from 'lucide-react';
 
 export default function MetricsCards({ stats }) {
   const totalReadings = stats?.total_readings ?? 0;
@@ -11,41 +11,53 @@ export default function MetricsCards({ stats }) {
 
   const cards = [
     {
-      title: 'Total Telemetry Packets',
+      title: 'TOTAL TELEMETRY PACKETS',
       value: totalReadings.toLocaleString(),
+      valueColor: 'text-slate-900',
       subtext: 'Ingested into PostgreSQL',
+      subtextColor: 'text-slate-500',
       icon: Database,
-      iconColor: 'text-indigo-400',
-      bgColor: 'bg-indigo-500/10',
-      borderColor: 'border-indigo-500/20'
+      iconColor: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
+      borderColor: 'border-emerald-200'
     },
     {
-      title: 'Flame Events Triggered',
+      title: 'FLAME EVENTS TRIGGERED',
       value: flameEvents.toLocaleString(),
+      valueColor: flameEvents > 0 ? 'text-rose-600' : 'text-slate-900',
       subtext: flameEvents > 0 ? `${flameEvents24h} in past 24 hours` : 'Zero alarms recorded',
+      subtextColor: 'text-slate-500',
       icon: Flame,
-      iconColor: 'text-rose-400',
-      bgColor: 'bg-rose-500/10',
-      borderColor: 'border-rose-500/20',
-      highlight: flameEvents > 0
+      iconColor: 'text-rose-500',
+      bgColor: 'bg-rose-50',
+      borderColor: 'border-rose-200'
     },
     {
-      title: 'Normal (Safe) Packets',
+      title: 'NORMAL (SAFE) PACKETS',
       value: normalEvents.toLocaleString(),
+      valueColor: 'text-emerald-600',
       subtext: 'Active-LOW HIGH logic verified',
-      icon: CheckCircle,
-      iconColor: 'text-emerald-400',
-      bgColor: 'bg-emerald-500/10',
-      borderColor: 'border-emerald-500/20'
+      subtextColor: 'text-slate-500',
+      icon: CheckCircle2,
+      iconColor: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
+      borderColor: 'border-emerald-200'
     },
     {
-      title: 'Online ESP32 Nodes',
-      value: `${activeOnline} / ${totalDevices}`,
+      title: 'ONLINE ESP32 NODES',
+      value: (
+        <span>
+          {activeOnline}{' '}
+          <span className="text-xl font-normal text-slate-400">/ {totalDevices}</span>
+        </span>
+      ),
+      valueColor: 'text-slate-900',
       subtext: activeOnline > 0 ? 'Heartbeat active (< 30s)' : 'All devices offline',
-      icon: Radio,
-      iconColor: activeOnline > 0 ? 'text-emerald-400' : 'text-amber-400',
-      bgColor: activeOnline > 0 ? 'bg-emerald-500/10' : 'bg-amber-500/10',
-      borderColor: activeOnline > 0 ? 'border-emerald-500/20' : 'border-amber-500/20'
+      subtextColor: activeOnline > 0 ? 'text-emerald-600' : 'text-rose-600 font-medium',
+      icon: Wifi,
+      iconColor: 'text-amber-500',
+      bgColor: 'bg-amber-50',
+      borderColor: 'border-amber-200'
     }
   ];
 
@@ -56,22 +68,22 @@ export default function MetricsCards({ stats }) {
         return (
           <div
             key={idx}
-            className={`rounded-xl bg-slate-900/90 border ${card.borderColor} p-5 shadow-sm relative overflow-hidden transition hover:border-slate-700`}
+            className="rounded-xl bg-white border border-slate-200 p-5 shadow-2xs hover:border-slate-300 transition"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-400 tracking-wide uppercase">
+              <span className="text-[11px] font-semibold text-slate-500 tracking-wider uppercase font-mono">
                 {card.title}
               </span>
-              <div className={`p-2 rounded-lg ${card.bgColor} ${card.iconColor}`}>
-                <IconComponent className="w-5 h-5" />
+              <div className={`p-1.5 rounded-lg ${card.bgColor} ${card.iconColor} border ${card.borderColor}`}>
+                <IconComponent className="w-4 h-4" />
               </div>
             </div>
-            <div className="mt-4 flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            <div className="mt-3 flex items-baseline">
+              <span className={`text-3xl font-extrabold tracking-tight ${card.valueColor}`}>
                 {card.value}
               </span>
             </div>
-            <p className="mt-1.5 text-xs text-slate-400">
+            <p className={`mt-1 text-xs font-mono ${card.subtextColor}`}>
               {card.subtext}
             </p>
           </div>
