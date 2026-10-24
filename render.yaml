@@ -35,13 +35,12 @@ services:
       - key: DEVICE_API_KEY
         generateValue: true # Generates a secure random API key on Render
       - key: ALLOWED_ORIGINS
-        value: "*" # Set to your deployed frontend URL after deployment
+        value: "*" # Open CORS so frontend and mobile clients can access
       - key: DEVICE_OFFLINE_THRESHOLD_SECONDS
         value: "30"
 
   # ----------------------------------------------------------------------------
   # Frontend Static Site (React + Vite)
-  # Note: Static sites are deployed to Render's global CDN, so they cannot have a region.
   # ----------------------------------------------------------------------------
   - type: web
     name: iot-fire-detection-dashboard
@@ -55,9 +54,6 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: iot-fire-detection-backend
-          property: host
+        value: "https://iot-fire-detection-backend.onrender.com"
       - key: VITE_POLL_INTERVAL_MS
         value: "3000"

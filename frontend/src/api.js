@@ -1,4 +1,22 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+let rawUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+// Handle cases where Render provides just the service name (e.g. "iot-fire-detection-backend")
+if (rawUrl) {
+  rawUrl = rawUrl.trim();
+  // Strip trailing slashes
+  rawUrl = rawUrl.replace(/\/+$/, '');
+
+  if (!rawUrl.startsWith('http://') && !rawUrl.startsWith('https://')) {
+    if (!rawUrl.includes('.')) {
+      // It's a bare service name from Render blueprint, append onrender.com
+      rawUrl = `https://${rawUrl}.onrender.com`;
+    } else {
+      rawUrl = `https://${rawUrl}`;
+    }
+  }
+}
+
+const API_BASE_URL = rawUrl;
 
 export async function fetchHealth() {
   const res = await fetch(`${API_BASE_URL}/health`);
