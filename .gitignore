@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# Hardware credentials
+esp32_firmware/config.h
+
 # Python
 __pycache__/
 *.py[cod]
