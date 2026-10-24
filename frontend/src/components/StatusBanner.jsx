@@ -22,15 +22,15 @@ export default function StatusBanner({ stats, latestReading, offlineThreshold = 
     return `${Math.floor(mins / 60)}h ago`;
   };
 
-  // State 1: FLAME DETECTED - Large Red Alert Banner
+  // State 1: FLAME DETECTED - Large Solid Red Alert Banner
   if (currentStatus === 'ALERT') {
     return (
-      <div className="rounded-2xl bg-gradient-to-r from-rose-950 via-red-900 to-rose-950 border-2 border-rose-500 p-6 sm:p-8 shadow-2xl shadow-rose-950/60 relative overflow-hidden animate-pulse">
+      <div className="rounded-2xl bg-gradient-to-r from-rose-950 via-red-900 to-rose-950 border-2 border-rose-500 p-6 sm:p-8 shadow-2xl shadow-rose-950/60 relative overflow-hidden transition-all duration-300">
         <div className="absolute -top-16 -right-16 w-48 h-48 bg-rose-600/20 rounded-full blur-3xl pointer-events-none" />
         
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
           <div className="flex items-start space-x-5">
-            <div className="p-4 bg-rose-600 text-white rounded-2xl shadow-lg ring-4 ring-rose-500/30 flex-shrink-0 animate-bounce">
+            <div className="p-4 bg-rose-600 text-white rounded-2xl shadow-lg ring-4 ring-rose-500/30 flex-shrink-0">
               <AlertTriangle className="w-10 h-10" />
             </div>
             <div>

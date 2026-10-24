@@ -68,9 +68,9 @@ export default function App() {
     }
   }, []);
 
-  // Table Data Fetcher (depends on pagination and filter states)
-  const loadTableData = useCallback(async () => {
-    setIsTableLoading(true);
+  // Table Data Fetcher (supports silent background updates to prevent flickering)
+  const loadTableData = useCallback(async (isSilent = false) => {
+    if (!isSilent) setIsTableLoading(true);
     try {
       const data = await fetchReadings({
         page,
@@ -86,17 +86,17 @@ export default function App() {
     } catch (err) {
       console.error('Error fetching historical table records:', err);
     } finally {
-      setIsTableLoading(false);
+      if (!isSilent) setIsTableLoading(false);
     }
   }, [page, pageSize, filterDevice, filterFlame, startDate, endDate]);
 
   // Initial load
   useEffect(() => {
     loadDashboardData(true);
-    loadTableData();
+    loadTableData(false);
   }, [loadDashboardData, loadTableData]);
 
-  // Periodic polling hook (every 3 seconds)
+  // Periodic polling hook (every 3 seconds - silent update)
   useEffect(() => {
     if (!isLivePolling) {
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
@@ -105,7 +105,7 @@ export default function App() {
 
     pollIntervalRef.current = setInterval(() => {
       loadDashboardData(false);
-      loadTableData();
+      loadTableData(true);
     }, 3000);
 
     return () => {
