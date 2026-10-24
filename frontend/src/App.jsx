@@ -28,6 +28,7 @@ export default function App() {
   // Filters
   const [filterFlame, setFilterFlame] = useState('');
   const [filterDevice, setFilterDevice] = useState('');
+  const [filterSource, setFilterSource] = useState(''); // '' | 'physical' | 'simulated'
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -75,10 +76,11 @@ export default function App() {
       const data = await fetchReadings({
         page,
         pageSize,
-        deviceId: filterDevice,
+        deviceId: filterSource === 'simulated' ? 'SIMULATED' : filterDevice,
         flameDetected: filterFlame,
         startDate,
-        endDate
+        endDate,
+        includeSimulated: filterSource !== 'physical'
       });
       setHistoricalReadings(data.items || []);
       setTotalRecords(data.total || 0);
@@ -88,7 +90,7 @@ export default function App() {
     } finally {
       if (!isSilent) setIsTableLoading(false);
     }
-  }, [page, pageSize, filterDevice, filterFlame, startDate, endDate]);
+  }, [page, pageSize, filterDevice, filterFlame, filterSource, startDate, endDate]);
 
   // Initial load
   useEffect(() => {
@@ -189,11 +191,17 @@ export default function App() {
           setFilterFlame={setFilterFlame}
           filterDevice={filterDevice}
           setFilterDevice={setFilterDevice}
+          filterSource={filterSource}
+          setFilterSource={setFilterSource}
           startDate={startDate}
           setStartDate={setStartDate}
           endDate={endDate}
           setEndDate={setEndDate}
           isLoading={isTableLoading}
+          onDataPurged={() => {
+            loadDashboardData(true);
+            loadTableData(false);
+          }}
         />
       </main>
 

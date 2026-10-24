@@ -198,3 +198,38 @@ def get_system_stats(db: Session, offline_threshold_seconds: int = 30) -> dict:
         "flame_events_24h": flame_events_24h,
         "offline_threshold_seconds": offline_threshold_seconds
     }
+
+
+def delete_sensor_readings(
+    db: Session,
+    simulated_only: bool = True,
+    device_id: Optional[str] = None,
+    delete_all: bool = False
+) -> int:
+    """
+    Safely purges historical records with authentication.
+    - If simulated_only is True: removes only simulated test records.
+    - If delete_all is True: resets the entire table.
+    - If device_id is specified: removes records for that device.
+    """
+    query = db.query(SensorReading)
+    if delete_all:
+        pass  # delete everything
+    elif simulated_only:
+        query = query.filter(SensorReading.is_simulated.is_(True))
+    elif device_id:
+        query = query.filter(SensorReading.device_id == device_id)
+
+    count = query.count()
+    query.delete(synchronize_session=False)
+    db.commit()
+
+    # Also clean up simulated devices from devices table if requested
+    if delete_all:
+        db.query(Device).delete(synchronize_session=False)
+        db.commit()
+    elif simulated_only:
+        db.query(Device).filter(Device.device_id.like("%SIMULATED%")).delete(synchronize_session=False)
+        db.commit()
+
+    return count

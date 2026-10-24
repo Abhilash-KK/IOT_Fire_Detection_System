@@ -86,3 +86,37 @@ def get_historical_readings(
         page_size=page_size,
         total_pages=total_pages
     )
+
+
+
+@router.delete(
+    "",
+    status_code=status.HTTP_200_OK,
+    summary="Safely purge unwanted history logs (Secured with X-API-Key)",
+    description="Purges simulated test logs or resets history. Protected by X-API-Key."
+)
+def delete_historical_readings(
+    simulated_only: bool = Query(True, description="Delete only simulated test records"),
+    device_id: Optional[str] = Query(None, description="Optional: Delete by device ID"),
+    delete_all: bool = Query(False, description="Reset entire history (all devices)"),
+    db: Session = Depends(get_db),
+    _api_key: str = Depends(verify_device_api_key)
+):
+    try:
+        deleted = crud.delete_sensor_readings(
+            db=db,
+            simulated_only=simulated_only,
+            device_id=device_id,
+            delete_all=delete_all
+        )
+        return {
+            "status": "success",
+            "deleted_count": deleted,
+            "message": f"Successfully deleted {deleted} records from the database."
+        }
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete records: {str(exc)}"
+        )
