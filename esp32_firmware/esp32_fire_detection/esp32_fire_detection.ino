@@ -27,11 +27,11 @@
 #if __has_include("config.h")
   #include "config.h"
 #else
-  // Default fallback credentials (replace for your environment)
-  const char* WIFI_SSID          = "YOUR_WIFI_SSID";
-  const char* WIFI_PASSWORD      = "YOUR_WIFI_PASSWORD";
-  const char* BACKEND_SERVER_URL = "http://192.168.1.100:8000/api/readings";
-  const char* DEVICE_API_KEY     = "test_device_key_12345";
+  // Default credentials configured for your Render cloud deployment and hotspot
+  const char* WIFI_SSID          = "moto g64 5G";
+  const char* WIFI_PASSWORD      = "abhilashkk";
+  const char* BACKEND_SERVER_URL = "https://iot-fire-detection-backend.onrender.com/api/readings";
+  const char* DEVICE_API_KEY     = "OmwaORYUoxHYaSCgPucODxuuPAjqeOr4kx/NjCmBsoA=";
   const char* DEVICE_ID          = "ESP32_FLAME_STATION_01";
 
   const int PIN_FLAME_SENSOR     = 27;  // Digital output of IR Flame Sensor

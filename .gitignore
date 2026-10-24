@@ -5,6 +5,7 @@
 
 # Hardware credentials
 esp32_firmware/config.h
+esp32_firmware/**/config.h
 
 # Python
 __pycache__/
