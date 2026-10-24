@@ -11,7 +11,7 @@ databases:
     plan: free
     databaseName: fire_detection_db
     user: fire_admin
-    region: oregon # or frankfurt, singapore
+    region: oregon
 
 services:
   # ----------------------------------------------------------------------------
@@ -41,12 +41,11 @@ services:
 
   # ----------------------------------------------------------------------------
   # Frontend Static Site (React + Vite)
+  # Note: Static sites are deployed to Render's global CDN, so they cannot have a region.
   # ----------------------------------------------------------------------------
   - type: web
     name: iot-fire-detection-dashboard
     runtime: static
-    plan: free
-    region: oregon
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
@@ -60,6 +59,5 @@ services:
           type: web
           name: iot-fire-detection-backend
           property: host
-          # Render automatically prepends https:// when resolving host for static sites
       - key: VITE_POLL_INTERVAL_MS
         value: "3000"
