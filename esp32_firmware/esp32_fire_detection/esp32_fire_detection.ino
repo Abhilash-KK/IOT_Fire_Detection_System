@@ -172,16 +172,17 @@ void sendTelemetryHttp(int sensorVal, bool flameState) {
     return;
   }
 
+  // Maintain client objects in function scope so they remain valid during POST
+  WiFiClientSecure secureClient;
+  WiFiClient standardClient;
   HTTPClient http;
   int wifiRssi = WiFi.RSSI();
 
   // Handle both standard HTTP (local dev) and HTTPS (cloud Render)
   if (String(BACKEND_SERVER_URL).startsWith("https://")) {
-    WiFiClientSecure secureClient;
-    secureClient.setInsecure(); // Allows college/demo SSL handshake without custom root CA bundle
+    secureClient.setInsecure(); // Allows SSL handshake without requiring custom CA certificate bundle
     http.begin(secureClient, BACKEND_SERVER_URL);
   } else {
-    WiFiClient standardClient;
     http.begin(standardClient, BACKEND_SERVER_URL);
   }
 
