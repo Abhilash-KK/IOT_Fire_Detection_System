@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.*
+node_modules
+frontend
+esp32_firmware
+docs
+tests
+*.md
+*.db
+*.sqlite3
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
